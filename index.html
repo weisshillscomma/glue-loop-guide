@@ -1,6 +1,15 @@
 <!doctype html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2QP16KYR2K"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2QP16KYR2K');
+</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Glue Loop Guide</title>
@@ -77,7 +86,22 @@ input[type=range]{width:100%;accent-color:var(--glue)}
 .run-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:28px;align-items:start}
 .mapbox{position:sticky;top:16px;background:#fff;border:2px solid var(--ink);border-radius:14px;padding:12px}
 .legend{font-family:var(--mono);font-size:12px;display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:6px}
-.legend i{display:inline-block;width:12px;height:4px;vertical-align:middle;margin-right:4px}
+.legend{display:grid;grid-template-columns:1fr;gap:2px}
+.legend i{display:inline-block;width:14px;height:5px;border-radius:3px;vertical-align:middle;margin-right:6px}
+.legend a{color:var(--muted);text-decoration:none;padding:3px 6px;border-radius:6px;transition:background .2s,color .2s}
+.legend a.on{color:var(--ink);background:var(--paper2);font-weight:600}
+#map .seg-line{transition:opacity .25s,stroke-width .25s}
+#map .badge{transition:opacity .25s}
+#map .badge circle{transition:fill .25s}
+#map.has-active .seg-line{opacity:.22}
+#map.has-active .seg-line.on{opacity:1;stroke-width:9}
+#map.has-active .badge{opacity:.45}
+#map.has-active .badge.on{opacity:1}
+#map .badge.on circle{fill:var(--c)}
+#map .badge.on text{fill:#fff}
+#map .badge{cursor:pointer}
+.seg{transition:box-shadow .25s,border-color .25s}
+.seg.on{border-color:var(--c);box-shadow:6px 6px 0 var(--c)}
 .seg{background:#fff;border:2px solid var(--ink);border-radius:14px;padding:22px;margin-bottom:22px}
 .seg-top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-family:var(--mono);font-size:13px}
 .pill{border-radius:999px;padding:3px 10px;background:var(--paper2)}
@@ -116,7 +140,11 @@ footer a{color:#fff}
 
 @media (max-width:860px){
   .run-grid{grid-template-columns:1fr}
-  .mapbox{position:static;order:-1}
+  .mapbox{position:sticky;top:0;z-index:5;order:-1;display:grid;grid-template-columns:120px 1fr;gap:10px;align-items:center;padding:8px 10px;border-radius:0 0 14px 14px;margin:0 -8px}
+  .mapbox .cap{display:none}
+  #map .lbl{display:none}
+  .seg{scroll-margin-top:170px}
+  .legend{font-size:11px}
   .summary{grid-template-columns:1fr}
   .sheet .two{grid-template-columns:1fr}
   .timeline li{grid-template-columns:80px 1fr}
@@ -136,15 +164,6 @@ footer a{color:#fff}
 }
 </style>
 </head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2QP16KYR2K"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-2QP16KYR2K');
-</script>
 <body>
 <header class="hero">
   <div class="wrap">
@@ -228,7 +247,7 @@ footer a{color:#fff}
     <div class="run-grid">
       <div id="segs"></div>
       <aside class="mapbox">
-        <svg id="map" viewBox="0 0 320 420" role="img" aria-label="Course map of the Glue Loop"></svg>
+        <svg id="map" viewBox="0 0 340 440" role="img" aria-label="Course map of the Glue Loop"></svg>
         <div class="legend" id="legend"></div>
         <div class="cap">Counterclockwise. Like every other runner in the park, unless you enjoy being yelled at by cyclists.</div>
       </aside>
@@ -396,7 +415,7 @@ function renderSegs(){
     <h4>Technique</h4><ul>${s.tech.map(x=>`<li>${x}</li>`).join('')}</ul>
     <h4>Fuel &amp; more</h4><ul>${s.fuel.map(x=>`<li>${x}</li>`).join('')}</ul>
   </article>`).join('');
-  $('legend').innerHTML=SEGS.map((s,i)=>`<span><i style="background:${s.c}"></i>${i+1}. ${s.name}</span>`).join('');
+  $('legend').innerHTML=SEGS.map((s,i)=>`<a href="#seg${i+1}"><i style="background:${s.c}"></i>${i+1}. ${s.name}</a>`).join('');
 }
 
 function update(){
@@ -451,27 +470,61 @@ function drawProfile(){
 
 let MAPXY=[];
 function drawMap(){
-  const W=320,H=420,pad=26,k=Math.cos(40.66*Math.PI/180);
+  const W=340,H=440,pad=46,k=Math.cos(40.66*Math.PI/180);
   const lats=LOC.map(p=>p[0]),lngs=LOC.map(p=>p[1]);
   const minLa=Math.min(...lats),maxLa=Math.max(...lats),minLo=Math.min(...lngs),maxLo=Math.max(...lngs);
-  const sx=(W-2*pad)/((maxLo-minLo)*k),sy=(H-2*pad)/(maxLa-minLa),s=Math.min(sx,sy);
+  const s=Math.min((W-2*pad)/((maxLo-minLo)*k),(H-2*pad)/(maxLa-minLa));
   const ox=(W-(maxLo-minLo)*k*s)/2,oy=(H-(maxLa-minLa)*s)/2;
   MAPXY=LOC.map(([la,lo])=>[ox+(lo-minLo)*k*s,oy+(maxLa-la)*s]);
-  let g=`<polygon points="${MAPXY.map(p=>p.join(',')).join(' ')}" fill="var(--park-soft)" stroke="none"/>`;
-  SEGS.forEach((sg,i)=>{const idx=DIST.map((d,j)=>j).filter(j=>DIST[j]>=sg.from-20&&DIST[j]<=sg.to+20);
-    g+=`<polyline points="${idx.map(j=>MAPXY[j].join(',')).join(' ')}" fill="none" stroke="${sg.c}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>`;
-    const mid=idx[Math.floor(idx.length/2)],[mx,my]=MAPXY[mid];
-    g+=`<g transform="translate(${mx},${my})"><circle r="11" fill="#fff" stroke="${sg.c}" stroke-width="2.5"/><text y="4" text-anchor="middle" font-family="Anton, Impact, 'Arial Narrow', sans-serif" font-size="12" fill="${sg.c}">${i+1}</text></g>`;});
-  [1,2,3].forEach(m=>{const i=DIST.findIndex(d=>d>=m*MI);const [mx,my]=MAPXY[i];
-    g+=`<circle cx="${mx}" cy="${my}" r="4" fill="var(--ink)"/><text x="${mx+8}" y="${my+4}" font-family="IBM Plex Mono" font-size="11" fill="var(--ink)">${m}</text>`;});
+  const cx=MAPXY.reduce((a,p)=>a+p[0],0)/MAPXY.length, cy=MAPXY.reduce((a,p)=>a+p[1],0)/MAPXY.length;
+  // push a route point outward (away from the park's centre) by r px
+  const out=(i,r)=>{const [x,y]=MAPXY[i];const dx=x-cx,dy=y-cy,l=Math.hypot(dx,dy)||1;return [x+dx/l*r,y+dy/l*r];};
+  const idxAt=d=>{let i=DIST.findIndex(v=>v>=d);return i<0?DIST.length-1:i;};
+  const AF="Anton, Impact, 'Arial Narrow', sans-serif", MF="'IBM Plex Mono', monospace";
+  let g=`<polygon points="${MAPXY.map(p=>p.join(',')).join(' ')}" fill="var(--park-soft)"/>`;
+  g+=`<text class="lbl" x="${cx}" y="${cy+5}" text-anchor="middle" font-family="${AF}" font-size="15" letter-spacing="1" fill="var(--glue-deep)" opacity=".4">PROSPECT PARK</text>`;
+  SEGS.forEach((sg,i)=>{const idx=DIST.map((d,j)=>j).filter(j=>DIST[j]>=sg.from-12&&DIST[j]<=sg.to+12);
+    g+=`<polyline class="seg-line" data-i="${i}" points="${idx.map(j=>MAPXY[j].join(',')).join(' ')}" fill="none" stroke="${sg.c}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>`;});
+  // mile markers: dot on the route, label tucked inside the loop
+  [1,2,3].forEach(m=>{const i=idxAt(m*MI);const [x,y]=MAPXY[i];const [lx,ly]=out(i,-20);
+    g+=`<circle cx="${x}" cy="${y}" r="4.5" fill="#fff" stroke="var(--ink)" stroke-width="2"/><text x="${lx}" y="${ly+4}" class="lbl" text-anchor="middle" font-family="${MF}" font-size="10.5" font-weight="600" fill="var(--ink)">mi ${m}</text>`;});
+  // start/finish
   const [sx0,sy0]=MAPXY[0];
-  g+=`<rect x="${sx0-8}" y="${sy0-8}" width="16" height="16" fill="var(--ink)"/><text x="${sx0+10}" y="${sy0+28}" text-anchor="end" font-family="IBM Plex Mono" font-size="11" fill="var(--ink)">start/finish · Peristyle</text>`;
-  g+=`<text x="${W/2}" y="${H/2}" text-anchor="middle" font-family="Anton, Impact, 'Arial Narrow', sans-serif" font-size="15" letter-spacing="1" fill="var(--glue-deep)" opacity=".55">PROSPECT PARK</text>`;
-  g+=`<text x="${W-8}" y="16" text-anchor="end" font-family="IBM Plex Mono" font-size="11" fill="var(--muted)">N ↑</text>`;
-  g+=`<circle id="mapdot" r="7" fill="var(--glue)" stroke="var(--ink)" stroke-width="2" opacity="0"/>`;
+  g+=`<rect x="${sx0-7}" y="${sy0-7}" width="14" height="14" fill="var(--ink)" transform="rotate(45 ${sx0} ${sy0})"/>`;
+  g+=`<text class="lbl" x="${sx0+14}" y="${sy0+24}" font-family="${MF}" font-size="10.5" font-weight="600" fill="var(--ink)">START / FINISH</text><text class="lbl" x="${sx0+14}" y="${sy0+37}" font-family="${MF}" font-size="10.5" fill="var(--muted)">the Peristyle</text>`;
+  // segment badges, pushed outside the loop so they never sit on the line or the labels
+  SEGS.forEach((sg,i)=>{let d=(sg.from+sg.to)/2; if(i===4)d=sg.from+(sg.to-sg.from)*0.35;
+    const [bx,by]=out(idxAt(d),22);
+    g+=`<g class="badge" data-i="${i}" style="--c:${sg.c}" transform="translate(${bx},${by})"><circle r="12" fill="#fff" stroke="${sg.c}" stroke-width="2.5"/><text y="4.5" text-anchor="middle" font-family="${AF}" font-size="13" fill="${sg.c}">${i+1}</text></g>`;});
+  g+=`<text class="lbl" x="${W-10}" y="18" text-anchor="end" font-family="${MF}" font-size="11" fill="var(--muted)">N ↑</text>`;
+  g+=`<circle id="mapdot" r="7" fill="var(--glue)" stroke="#fff" stroke-width="2.5" opacity="0"/>`;
+  $('map').setAttribute('viewBox',`0 0 ${W} ${H}`);
   $('map').innerHTML=g;
+  $('map').querySelectorAll('.badge').forEach(b=>b.addEventListener('click',()=>$('seg'+(+b.dataset.i+1)).scrollIntoView({behavior:'smooth',block:'start'})));
 }
 function mapDot(i){const d=$('mapdot');if(!d)return;d.setAttribute('cx',MAPXY[i][0]);d.setAttribute('cy',MAPXY[i][1]);d.setAttribute('opacity',1);}
+
+// highlight the segment whose card is in the reading zone
+let ACTIVE=-1;
+function setActive(i){
+  if(i===ACTIVE)return; ACTIVE=i;
+  const map=$('map'); map.classList.toggle('has-active',i>=0);
+  map.querySelectorAll('.seg-line,.badge').forEach(el=>el.classList.toggle('on',+el.dataset.i===i));
+  map.querySelectorAll('.seg-line.on').forEach(el=>el.parentNode.insertBefore(el,map.querySelector('.seg-line:last-of-type').nextSibling));
+  document.querySelectorAll('#legend a').forEach((a,j)=>a.classList.toggle('on',j===i));
+  document.querySelectorAll('.seg').forEach((a,j)=>a.classList.toggle('on',j===i));
+}
+function watchSegs(){
+  const cards=[...document.querySelectorAll('.seg')];
+  let ticking=false;
+  const check=()=>{ticking=false;
+    const line=window.innerHeight*0.45, box=$('segs').getBoundingClientRect();
+    if(box.top>line||box.bottom<line*0.4){setActive(-1);return;}
+    let best=-1;cards.forEach((c,i)=>{if(c.getBoundingClientRect().top<=line)best=i;});
+    setActive(Math.max(best,0));};
+  addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(check);}},{passive:true});
+  addEventListener('resize',check); check();
+}
 
 // controls
 const q=$('quick');[1050,1200,1350,1500,1650,1800,2100].forEach(g=>{const b=document.createElement('button');b.className='chip';b.dataset.g=g;b.textContent=fmt(g);b.onclick=()=>{S.goal=g;$('goal').value=g;update();};q.appendChild(b);});
@@ -480,7 +533,7 @@ $('neg').oninput=e=>{S.neg=+e.target.value;update();};
 document.querySelectorAll('.model').forEach(b=>b.onclick=()=>{S.model=b.dataset.m;update();});
 document.querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>{S.unit=b.dataset.u;update();});
 
-renderSegs();drawProfile();drawMap();update();
+renderSegs();drawProfile();drawMap();update();watchSegs();
 </script>
 </body>
 </html>
