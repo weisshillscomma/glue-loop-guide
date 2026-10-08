@@ -140,11 +140,16 @@ footer a{color:#fff}
 
 @media (max-width:860px){
   .run-grid{grid-template-columns:1fr}
-  .mapbox{position:sticky;top:0;z-index:5;order:-1;display:grid;grid-template-columns:120px 1fr;gap:10px;align-items:center;padding:8px 10px;border-radius:0 0 14px 14px;margin:0 -8px}
+  /* full border at rest; once pinned, the top 14px (border + rounded corners) slides off-screen */
+  .mapbox{position:sticky;top:-14px;z-index:5;order:-1;display:grid;grid-template-columns:64px 1fr;gap:10px;align-items:center;padding:20px 10px 6px;border-radius:12px;margin:0 -8px}
   .mapbox .cap{display:none}
-  #map .lbl{display:none}
-  .seg{scroll-margin-top:170px}
-  .legend{font-size:11px}
+  #map .lbl,#map .badge{display:none}
+  #map .seg-line{stroke-width:7}
+  #map.has-active .seg-line.on{stroke-width:11}
+  .seg{scroll-margin-top:120px}
+  .legend{font-size:11px;line-height:1.25;gap:0;margin-top:0}
+  .legend a{padding:2px 6px}
+  .legend i{width:10px;height:4px;margin-right:5px}
   .summary{grid-template-columns:1fr}
   .sheet .two{grid-template-columns:1fr}
   .timeline li{grid-template-columns:80px 1fr}
@@ -234,7 +239,7 @@ footer a{color:#fff}
     <div class="stats">
       <div class="stat"><div class="v">~100′</div><p>of climb in the whole loop, and nearly all of it lives in mile 2.</p></div>
       <div class="stat"><div class="v">5.4%</div><p>the steepest stretch, up to the "Lane Use" sign. You will learn to hate a traffic sign.</p></div>
-      <div class="stat"><div class="v">Up 90′ · Down 90′</div><p>the East Drive hill, then the West Drive drop. The loop gives it all back, just not when you want it.</p></div>
+      <div class="stat"><div class="v">↑90′ ↓90′</div><p>the East Drive hill, then the West Drive drop. The loop gives it all back, just not when you want it.</p></div>
       <div class="stat"><div class="v">0</div><p>bridges. Anyone who tells you the Glue Loop has a bridge is thinking of a different race.</p></div>
     </div>
   </div>
@@ -332,7 +337,7 @@ footer a{color:#fff}
       <div class="meta" id="sheetMeta"></div>
       <table><thead><tr><th>Mi</th><th>Segment</th><th>Pace</th><th>Clock</th><th>Cue</th></tr></thead><tbody id="sheetTable"></tbody></table>
       <div class="two">
-        <div><h4>After</h4>Bags at the Peristyle. Shirt. Bagel. Photo for the club chat.</div>
+        <div><h4>After</h4>Porta potty (surge #4, no pacing required). Bags at the Peristyle. Shirt. Bagel. Photo for the club chat.</div>
         <div><h4>Don't surge</h4>The start · the bottom of the hill · the West Drive descent. The bill for all three arrives at the Lake.</div>
       </div>
     </div>
@@ -387,7 +392,7 @@ const SEGS=[
   course:['The road bottoms out along the Lake and flattens for the run home. After the descent, flat feels uphill. It isn\'t. Your legs are lying.','You\'ll see the Peristyle before you reach it. It\'s further than it looks. Everything in this park is further than it looks.'],
   pace:['Now it\'s time to race people, not the clock. Pick a friend ahead of you and reel them in.','There\'s no finish chute. There\'s no medal. There is, however, eternal bragging rights, which last until the next Glue Loop.'],
   tech:['Head up through the finish. Somebody is taking a photo. That photo is going in the group chat.','Remember how lucky you are to be able to run this loop. Then remember it\'s only 3.35 miles and you can do it again next week.'],
-  fuel:['After: collect the shirt. Then a bagel. In that order.']}
+  fuel:['Let\'s be honest, the finishing kick starts the moment you cross the finish line and are looking for the porta potties.']}
 ];
 
 const S={goal:1350,model:'course',neg:20,unit:'mi'};
@@ -498,7 +503,11 @@ function drawMap(){
     g+=`<g class="badge" data-i="${i}" style="--c:${sg.c}" transform="translate(${bx},${by})"><circle r="12" fill="#fff" stroke="${sg.c}" stroke-width="2.5"/><text y="4.5" text-anchor="middle" font-family="${AF}" font-size="13" fill="${sg.c}">${i+1}</text></g>`;});
   g+=`<text class="lbl" x="${W-10}" y="18" text-anchor="end" font-family="${MF}" font-size="11" fill="var(--muted)">N ↑</text>`;
   g+=`<circle id="mapdot" r="7" fill="var(--glue)" stroke="#fff" stroke-width="2.5" opacity="0"/>`;
-  $('map').setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const xs=MAPXY.map(p=>p[0]),ys=MAPXY.map(p=>p[1]),m=8;
+  const tight=`${Math.min(...xs)-m} ${Math.min(...ys)-m} ${Math.max(...xs)-Math.min(...xs)+2*m} ${Math.max(...ys)-Math.min(...ys)+2*m}`;
+  const mq=matchMedia('(max-width:860px)');
+  const setVB=()=>$('map').setAttribute('viewBox',mq.matches?tight:`0 0 ${W} ${H}`);
+  setVB(); mq.addEventListener('change',setVB);
   $('map').innerHTML=g;
   $('map').querySelectorAll('.badge').forEach(b=>b.addEventListener('click',()=>$('seg'+(+b.dataset.i+1)).scrollIntoView({behavior:'smooth',block:'start'})));
 }
