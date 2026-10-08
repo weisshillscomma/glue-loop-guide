@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Glue Loop Guide</title>
+<meta name="description" content="The Glue Loop, mile by mile (all 3.35 of them). Two drives. One hill. Zero bridges.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Public+Sans:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#ffffff; --paper2:#eef3fc; --ink:#0c1d3f; --muted:#56627a; --line:#d6dff0;
+  --glue:#1f4fbf; --glue-deep:#0b2a6f; --glue-soft:#dde7fa; --park:#0b2a6f; --park-soft:#eef3fc; --sky:#3b9ae1;
+  --s1:#3b9ae1; --s2:#0b2a6f; --s3:#1f4fbf; --s4:#0e7c9b; --s5:#5b6f95;
+  --display:'Anton',Impact,'Arial Narrow',sans-serif; --serif:'Public Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:17px;line-height:1.6}
+a{color:var(--glue)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+.mono{font-family:var(--mono)}
+/* hero */
+header.hero{border-bottom:6px solid var(--glue);padding:28px 0 44px;color:#fff;background:
+  repeating-linear-gradient(90deg,transparent 0 78px,rgba(255,255,255,.05) 78px 80px),var(--glue-deep)}
+header.hero .kicker{color:rgba(255,255,255,.8)} header.hero .kicker b{color:#fff}
+header.hero .toc a{color:var(--ink);border-color:var(--glue-deep)}
+header.hero .toc a:hover{box-shadow:4px 4px 0 var(--glue-deep)}
+.kicker{font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 14px}
+.kicker b{color:var(--ink)}
+h1{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(40px,7.5vw,88px);line-height:.98;letter-spacing:.005em;margin:22px 0 22px}
+h1,h2,h3,.big,.stat .v,.toc .t,.model b,.btn{font-weight:400}
+h1 span{display:block}
+h1 .o{color:#fff;background:var(--glue);padding:0 .12em;display:inline-block}
+.lede{max-width:720px;font-size:18px}
+.lede p{margin:0 0 14px}
+.toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:28px}
+.toc a{display:block;text-decoration:none;color:var(--ink);border:2px solid var(--ink);border-radius:10px;padding:10px 12px;background:#fff;transition:transform .12s}
+.toc a:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink)}
+.toc .n{font-family:var(--mono);color:var(--glue);font-size:13px}
+.toc .t{font-family:var(--display);text-transform:uppercase;font-size:20px;letter-spacing:.02em;display:block;color:var(--glue-deep)}
+.toc .d{font-family:var(--mono);font-size:12px;color:var(--muted)}
+section{padding:56px 0;border-bottom:1px solid var(--line)}
+.sec-label{font-family:var(--mono);font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--glue)}
+h2{font-family:var(--display);text-transform:uppercase;font-size:clamp(34px,5.5vw,58px);line-height:1;margin:6px 0 18px;letter-spacing:.01em;color:var(--glue-deep)}
+h3{font-family:var(--display);text-transform:uppercase;font-size:26px;margin:4px 0 6px;letter-spacing:.02em;color:var(--glue-deep)}
+.sub{color:var(--muted);font-style:italic;margin:0 0 14px}
+/* controls */
+.panel{background:#fff;border:2px solid var(--ink);border-radius:14px;padding:22px}
+.ctl{margin:18px 0}
+.ctl label.h{font-family:var(--mono);font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:8px}
+.big{font-family:var(--display);font-size:64px;line-height:1;color:var(--glue-deep)}
+input[type=range]{width:100%;accent-color:var(--glue)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--mono);font-size:14px;border:1.5px solid var(--ink);background:var(--paper);border-radius:999px;padding:6px 12px;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+.models{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.model{text-align:left;border:1.5px solid var(--ink);background:var(--paper);border-radius:10px;padding:12px;cursor:pointer;font:inherit;color:inherit}
+.model b{font-family:var(--display);text-transform:uppercase;letter-spacing:.03em;font-size:20px;display:block;color:var(--glue-deep)}
+.model span{font-size:15px;color:var(--muted)}
+.model[aria-pressed=true]{background:var(--glue-soft);box-shadow:3px 3px 0 var(--ink)}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+.summary div{background:var(--paper2);border-radius:10px;padding:12px}
+.summary small{font-family:var(--mono);font-size:12px;color:var(--muted);text-transform:uppercase}
+.summary strong{display:block;font-family:var(--mono);font-size:24px}
+#negWrap[hidden]{display:none}
+/* charts */
+.chart{margin-top:24px}
+.chart svg{width:100%;height:auto;display:block;overflow:visible}
+.cap{font-size:15px;color:var(--muted);font-style:italic;margin-top:6px}
+#tip{font-family:var(--mono);font-size:13px;min-height:20px;margin-top:6px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:22px}
+.stat{border-top:4px solid var(--glue);padding-top:10px}
+.stat .v{font-family:var(--display);font-size:40px;line-height:1;color:var(--glue)}
+.stat p{margin:6px 0 0;font-size:15px;color:var(--muted)}
+/* run */
+.run-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:28px;align-items:start}
+.mapbox{position:sticky;top:16px;background:#fff;border:2px solid var(--ink);border-radius:14px;padding:12px}
+.legend{font-family:var(--mono);font-size:12px;display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:6px}
+.legend i{display:inline-block;width:12px;height:4px;vertical-align:middle;margin-right:4px}
+.seg{background:#fff;border:2px solid var(--ink);border-radius:14px;padding:22px;margin-bottom:22px}
+.seg-top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-family:var(--mono);font-size:13px}
+.pill{border-radius:999px;padding:3px 10px;background:var(--paper2)}
+.pill.trap{background:var(--glue-deep);color:#fff}
+.pill.fav{background:#fff;color:var(--glue);box-shadow:inset 0 0 0 1.5px var(--glue)}
+.pill.sneak{background:var(--glue);color:#fff}
+.seg .num{font-family:var(--display);color:var(--c)}
+.split{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;background:var(--paper2);border-radius:10px;padding:12px;margin:14px 0}
+.split small{font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--muted);display:block}
+.split strong{font-family:var(--mono);font-size:18px}
+.seg h4{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.08em;margin:16px 0 4px;color:var(--c)}
+.seg ul{margin:0;padding-left:20px}
+.seg li{margin:4px 0}
+/* tables */
+table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:15px}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line)}
+th{font-size:12px;text-transform:uppercase;color:var(--muted);letter-spacing:.06em}
+.note{background:var(--glue-soft);border-left:4px solid var(--glue);padding:14px 16px;border-radius:0 10px 10px 0;margin:18px 0}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.card{background:#fff;border:2px solid var(--ink);border-radius:14px;padding:18px}
+.card h3{font-size:22px}
+.card p{margin:6px 0 0;font-size:16px}
+.timeline{list-style:none;padding:0;margin:0}
+.timeline li{display:grid;grid-template-columns:100px 1fr;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.timeline b{font-family:var(--mono);color:var(--glue)}
+.btn{font-family:var(--display);text-transform:uppercase;letter-spacing:.04em;font-size:20px;background:var(--glue);color:#fff;border:2px solid var(--ink);border-radius:10px;padding:12px 20px;cursor:pointer;box-shadow:4px 4px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
+#pocket .sheet{background:#fff;border:2px solid var(--ink);border-radius:14px;padding:20px;margin-top:20px}
+#pocket .sheet h3{margin-bottom:2px}
+.sheet .meta{font-family:var(--mono);font-size:13px;color:var(--muted);margin-bottom:12px}
+.sheet .two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px;font-size:15px}
+.sheet .two h4{font-family:var(--mono);font-size:12px;text-transform:uppercase;margin:0 0 4px;color:var(--glue)}
+footer{padding:36px 0 60px;font-size:15px;color:rgba(255,255,255,.85);background:var(--glue-deep)}
+footer a{color:#fff}
+.tee{display:block;margin-top:28px;background:var(--paper2);border-radius:14px;padding:20px}
+
+@media (max-width:860px){
+  .run-grid{grid-template-columns:1fr}
+  .mapbox{position:static;order:-1}
+  .summary{grid-template-columns:1fr}
+  .sheet .two{grid-template-columns:1fr}
+  .timeline li{grid-template-columns:80px 1fr}
+  #pocket .sheet{padding:12px}
+  .sheet table{font-size:12px}
+  .sheet th,.sheet td{padding:7px 4px}
+  .sheet td:last-child,.sheet th:last-child{display:none}
+}
+@media print{
+  body{background:#fff;font-size:12px}
+  body > *:not(main){display:none}
+  main > *:not(#pocket){display:none}
+  #pocket{padding:0;border:0}
+  #pocket > .wrap > *:not(.sheet){display:none}
+  #pocket .sheet{border:1px solid #000;margin:0}
+  table{font-size:11px}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker"><b>The Glue Loop Guide</b><span>·</span><span>A Glue Factory production</span><span>·</span><span>Race day: whenever the club says so</span><span>·</span><span>The Peristyle to the Peristyle</span></div>
+    <h1><span>Two Drives.</span><span class="o">One Hill.</span><span>Zero Bridges.</span></h1>
+    <div class="lede">
+      <p>I'm convinced that the Glue Loop is the greatest 3.35-mile race in the world. It is also one of the hardest 3.35-mile races in the world, if you only count races that are exactly one lap of Prospect Park and start at the Peristyle, of which there is one.</p>
+      <p>The Glue Loop baits you into surging three separate times: off the start, at the bottom of the East Drive hill, and down the West Drive. The consequences for falling for these surges seem trivial until roughly minute fourteen, when your legs set like craft glue on a popsicle stick. Every member of Glue Factory has been that popsicle stick at least once. It's practically the initiation. This guide exists so you only have to be it the one time.</p>
+    </div>
+    <nav class="toc" aria-label="Sections">
+      <a href="#pace-plan"><span class="n">01</span><span class="t">Your Pace Plan</span><span class="d">goal time · three models</span></a>
+      <a href="#the-run"><span class="n">02</span><span class="t">The Run</span><span class="d">five segments · one hill</span></a>
+      <a href="#getting-there"><span class="n">03</span><span class="t">Getting There</span><span class="d">train vs. bike vs. jog</span></a>
+      <a href="#weather"><span class="n">04</span><span class="t">The Weather</span><span class="d">it's outside</span></a>
+      <a href="#race-day"><span class="n">05</span><span class="t">Race Day</span><span class="d">waves · hoodie · crew</span></a>
+      <a href="#pocket"><span class="n">06</span><span class="t">Pocket Plan</span><span class="d">print it · laminate it</span></a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section id="pace-plan">
+  <div class="wrap">
+    <div class="sec-label">Section 01 · Your Pace Plan</div>
+    <h2>Make this plan yours</h2>
+    <p>Pick a goal time and a pacing model. Every segment below shows the pace and elapsed time you should be hitting, and the mile table updates too. All three and a third of it.</p>
+
+    <div class="panel">
+      <div class="ctl">
+        <label class="h" for="goal">Goal finish time</label>
+        <div class="big mono" id="goalOut">22:30</div>
+        <input type="range" id="goal" min="900" max="2400" step="5" value="1350" aria-label="Goal finish time in seconds">
+        <div class="mono" style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted)"><span>15:00 (show-off)</span><span>40:00 (scenic)</span></div>
+      </div>
+      <div class="ctl">
+        <label class="h">Quick targets</label>
+        <div class="chips" id="quick"></div>
+      </div>
+      <div class="ctl">
+        <label class="h">Pick a pacing model</label>
+        <div class="models" id="models">
+          <button class="model" data-m="even" aria-pressed="false"><b>Even</b><span>Same pace every step, hill be damned.</span></button>
+          <button class="model" data-m="course" aria-pressed="true"><b>Course-aware</b><span>Give time to the hill, take it back on the West Drive. Matches Prospect Park.</span></button>
+          <button class="model" data-m="neg" aria-pressed="false"><b>Negative split</b><span>Hold back until the top, then let gravity do the bragging.</span></button>
+        </div>
+      </div>
+      <div class="ctl" id="negWrap" hidden>
+        <label class="h" for="neg">Second half faster by <span class="mono" id="negOut">0:20</span></label>
+        <input type="range" id="neg" min="0" max="90" step="5" value="20">
+      </div>
+      <div class="ctl">
+        <label class="h">Pace units</label>
+        <div class="chips"><button class="chip" data-u="mi" aria-pressed="true">min/mi</button><button class="chip" data-u="km" aria-pressed="false">min/km</button></div>
+      </div>
+      <div class="summary">
+        <div><small>Avg pace</small><strong id="avgOut">–</strong></div>
+        <div><small>First half</small><strong id="h1Out">–</strong></div>
+        <div><small>Second half</small><strong id="h2Out">–</strong></div>
+      </div>
+    </div>
+
+    <div class="chart">
+      <svg id="profile" viewBox="0 0 800 200" role="img" aria-label="Elevation profile of the Glue Loop"></svg>
+      <div id="tip">Move across the profile for distance, elevation, and where you are.</div>
+      <div class="cap">One loop, five segments (shaded), roughly 100 ft of climb, nearly all of it in one place you can see coming for a kilometer.</div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="v">~100′</div><p>of climb in the whole loop, and nearly all of it lives in mile 2.</p></div>
+      <div class="stat"><div class="v">5.4%</div><p>the steepest stretch, up to the "Lane Use" sign. You will learn to hate a traffic sign.</p></div>
+      <div class="stat"><div class="v">Up 90′ · Down 90′</div><p>the East Drive hill, then the West Drive drop. The loop gives it all back, just not when you want it.</p></div>
+      <div class="stat"><div class="v">0</div><p>bridges. Anyone who tells you the Glue Loop has a bridge is thinking of a different race.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="the-run">
+  <div class="wrap">
+    <div class="sec-label">Section 02 · The Run</div>
+    <h2>Five segments, one plan</h2>
+    <div class="run-grid">
+      <div id="segs"></div>
+      <aside class="mapbox">
+        <svg id="map" viewBox="0 0 320 420" role="img" aria-label="Course map of the Glue Loop"></svg>
+        <div class="legend" id="legend"></div>
+        <div class="cap">Counterclockwise. Like every other runner in the park, unless you enjoy being yelled at by cyclists.</div>
+      </aside>
+    </div>
+
+    <h3 style="margin-top:30px">The whole plan in one glance</h3>
+    <p class="sub">Same goal and model you set above. Press lap at every mile marker you can find. (There are signs. Some of them are even right.)</p>
+    <table><thead><tr><th>Mile</th><th>Pace</th><th>Elapsed</th></tr></thead><tbody id="mileTable"></tbody></table>
+  </div>
+</section>
+
+<section id="getting-there">
+  <div class="wrap">
+    <div class="sec-label">Section 03 · Getting to the Start</div>
+    <h2>The race before the race</h2>
+    <p>The Peristyle is in Prospect Park. You are, statistically, already in Brooklyn. Getting a handful of runners there is not its own event, but I am going to treat it like one anyway.</p>
+    <div class="note">
+      <b>New this year — read this even if you've run it before:</b> nothing has changed. There is no transport selection window. Your bib has no transport assignment printed on it, just a number and the quiet weight of expectation. Showing up by a mode you weren't assigned will result in absolutely nothing.
+    </div>
+    <div class="cards">
+      <div class="card"><h3>The train</h3><p>The B or Q to Parkside Ave, then a short walk into the park. My pick, if I'm being honest about how I feel before 8 a.m.</p></div>
+      <div class="card"><h3>The bike</h3><p>Lock it to something near the start. Do not lock it to another runner.</p></div>
+      <div class="card"><h3>The warm-up jog</h3><p>Run there. It counts as a warm-up and gives you something to complain about at the start line.</p></div>
+    </div>
+    <h3 style="margin-top:30px">Work backwards from the "go"</h3>
+    <ul class="timeline">
+      <li><b>−60 min</b><span>Wake up. Outfit was laid out the night before, so your brain makes zero decisions.</span></li>
+      <li><b>−50 min</b><span>Coffee. A banana. Not the second banana.</span></li>
+      <li><b>−30 min</b><span>Leave. Check the group chat for the start time, which has moved.</span></li>
+      <li><b>−20 min</b><span>Arrive at the Peristyle. Pick up your bib, pin it on (four pins, not two), and add your stuff to the pile.</span></li>
+      <li><b>−15 min</b><span>Easy jog, a few strides, small talk you will not remember.</span></li>
+      <li><b>−2 min</b><span>Someone asks "are we doing this?" We are doing this.</span></li>
+      <li><b>0:00</b><span>No cannon. No Sinatra. Someone says "go," probably.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="weather">
+  <div class="wrap">
+    <div class="sec-label">Section 04 · The Weather</div>
+    <h2>It will be outside</h2>
+    <p>The Glue Loop is held in a park, which places it, historically, outdoors. Conditions range from "lovely" to "why did we pick today." Check the forecast the night before; dress for the run, not the standing around, because there is barely any standing around.</p>
+    <div class="cards">
+      <div class="card"><h3>Cold · under 45°F</h3><p>Long sleeves, gloves you can tuck in your shorts by the top of the hill. You'll be warm by the zoo.</p></div>
+      <div class="card"><h3>Ideal · 45–60°F</h3><p>Singlet and shorts. The biggest mistake I see is a jacket at the start line of a 3-mile race.</p></div>
+      <div class="card"><h3>Warm · over 60°F</h3><p>Slow the goal a bit from the start. The East Drive hill gets full sun and zero sympathy.</p></div>
+    </div>
+    <p style="margin-top:20px"><b>The wind rule:</b> with no bridges, the wind is never dangerous, only rude. Into a headwind on the West Drive, hold effort and let pace go. <b>The cyclist rule:</b> stay in the runner lane. They are not racing you. Some of them think they are.</p>
+  </div>
+</section>
+
+<section id="race-day">
+  <div class="wrap">
+    <div class="sec-label">Section 05 · Race Day</div>
+    <h2>The details that trip people up</h2>
+    <div class="cards">
+      <div class="card"><h3>Waves</h3><table><tr><td>Wave 1</td><td>When the club says go</td></tr><tr><td>Wave 2</td><td>Whoever was late</td></tr></table><p>You may drop back to Wave 2. You cannot move up, because Wave 1 is gone.</p></div>
+      <div class="card"><h3>Bag check</h3><p>The Peristyle. Everyone leaves their things there while they race, and it works on the honor system and the fact that nobody wants your sweaty hoodie. Make your bag recognizable; you'll be finding it with your brain at 30% capacity.</p></div>
+      <div class="card"><h3>Bib pickup</h3><p>Race morning, at the Peristyle. No expo, no Javits, no ID check. Get there early enough to pin it on straight; a crooked bib is visible in every photo forever.</p></div>
+      <div class="card"><h3>For your crew</h3><p><b>The top of the hill:</b> where a familiar face is worth thirty seconds. <b>The bandshell stretch:</b> easy to reach, and you'll be fast there. <b>The finish:</b> mostly so someone can take the photo.</p></div>
+      <div class="card"><h3>Your watch</h3><p>GPS works fine in the park. Use it. That said, I'll still pretend there's a hard-won wisdom to pressing lap at every mile, because that's the kind of guide this is.</p></div>
+      <div class="card"><h3>Security, in one line</h3><p>Watch out for the dog on the extendable leash. There is always one.</p></div>
+    </div>
+    <div class="tee">
+      <div>
+        <h3>The shirt</h3>
+        <p>Every finisher gets one. It says something to the effect of "Glue Loop · Prospect Park · 1 Loop," which is both a souvenir and the entire course description. It is, by any reasonable measure, the most desirable garment in Brooklyn running. People have run the Glue Loop for the shirt alone. People have been seen wearing the shirt to other people's races. This is encouraged.</p>
+        <p style="color:var(--muted);font-size:15px">Size up if you plan on wearing it over layers in November. Size down if you plan on being photographed in it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pocket">
+  <div class="wrap">
+    <div class="sec-label">Section 06 · Pocket Plan</div>
+    <h2>A pocket plan, made for you</h2>
+    <p>Everything you set on this page on one sheet. Print it, screenshot it, or fold it into your shorts pocket where it will become pulp by the zoo.</p>
+    <button class="btn" onclick="window.print()">Print my plan</button>
+    <div class="sheet">
+      <h3>The Glue Loop · Prospect Park</h3>
+      <div class="meta" id="sheetMeta"></div>
+      <table><thead><tr><th>Mi</th><th>Segment</th><th>Pace</th><th>Clock</th><th>Cue</th></tr></thead><tbody id="sheetTable"></tbody></table>
+      <div class="two">
+        <div><h4>After</h4>Bags at the Peristyle. Shirt. Bagel. Photo for the club chat.</div>
+        <div><h4>Don't surge</h4>The start · the bottom of the hill · the West Drive descent. The bill for all three arrives at the Lake.</div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    A parody, made with love by and for Glue Factory. Not affiliated with NYRR, the NYC Parks Department, or any actual adhesive manufacturer. Inspired by <a href="https://www.nycmarathonguide.com/">The NYC Marathon Guide</a>, which you should absolutely read if you're running a race with bridges in it. Course line and elevation from a GPS recording of the loop, so treat any single foot of elevation with suspicion.
+  </div>
+</footer>
+
+<script>
+const LOC=[[40.653492,-73.967718],[40.653514,-73.967665],[40.653568,-73.967488],[40.653632,-73.967264],[40.65367,-73.967092],[40.653709,-73.966863],[40.653738,-73.966691],[40.653788,-73.966457],[40.653831,-73.966221],[40.653862,-73.966056],[40.653901,-73.965836],[40.653949,-73.965613],[40.653991,-73.965449],[40.654058,-73.965232],[40.654138,-73.965015],[40.654204,-73.964862],[40.6543,-73.964674],[40.654411,-73.964494],[40.654504,-73.964357],[40.654632,-73.964181],[40.654727,-73.964058],[40.654856,-73.963904],[40.654989,-73.963764],[40.655136,-73.963637],[40.655252,-73.963542],[40.6554,-73.963418],[40.65555,-73.96331],[40.655666,-73.963235],[40.655824,-73.963146],[40.655982,-73.963062],[40.656141,-73.962983],[40.656299,-73.962936],[40.656464,-73.962912],[40.656628,-73.962894],[40.656756,-73.962889],[40.656927,-73.962891],[40.657089,-73.962913],[40.657248,-73.962954],[40.65737,-73.963002],[40.657549,-73.963085],[40.657717,-73.963161],[40.657881,-73.963239],[40.657998,-73.963306],[40.658126,-73.963383],[40.65831,-73.963472],[40.65849,-73.96355],[40.658616,-73.963589],[40.658782,-73.963608],[40.658953,-73.963586],[40.659127,-73.96355],[40.659258,-73.963542],[40.659425,-73.963581],[40.65958,-73.963663],[40.659734,-73.963745],[40.659892,-73.963832],[40.660048,-73.963923],[40.660195,-73.964017],[40.660304,-73.964092],[40.660453,-73.964196],[40.660604,-73.964306],[40.660761,-73.964398],[40.66092,-73.964477],[40.661064,-73.964567],[40.661204,-73.964645],[40.661354,-73.964719],[40.661507,-73.964784],[40.661666,-73.964849],[40.661828,-73.964927],[40.661945,-73.964987],[40.662099,-73.965077],[40.662256,-73.965172],[40.662422,-73.965258],[40.662551,-73.965318],[40.662714,-73.965361],[40.662882,-73.965374],[40.663047,-73.965394],[40.663204,-73.965405],[40.663375,-73.965404],[40.66351,-73.965424],[40.663674,-73.965487],[40.663837,-73.965581],[40.664002,-73.96567],[40.664154,-73.965737],[40.664273,-73.965792],[40.664438,-73.965854],[40.664589,-73.965914],[40.664744,-73.965974],[40.664906,-73.96605],[40.665037,-73.966112],[40.665206,-73.966196],[40.665325,-73.966266],[40.665499,-73.96636],[40.665661,-73.966433],[40.665797,-73.966524],[40.665956,-73.966662],[40.666077,-73.966787],[40.666174,-73.966892],[40.666298,-73.967043],[40.666418,-73.96719],[40.666528,-73.967375],[40.666621,-73.967556],[40.666707,-73.96772],[40.666813,-73.967934],[40.666869,-73.96807],[40.666982,-73.968293],[40.667084,-73.968442],[40.667201,-73.968574],[40.667336,-73.968687],[40.667494,-73.96877],[40.667619,-73.968811],[40.667784,-73.968837],[40.667982,-73.968848],[40.66813,-73.968856],[40.6683,-73.968908],[40.668446,-73.968982],[40.668595,-73.969074],[40.668706,-73.969143],[40.668897,-73.969226],[40.669052,-73.969236],[40.669204,-73.969193],[40.669356,-73.969112],[40.669503,-73.969017],[40.669643,-73.968911],[40.66979,-73.968816],[40.669935,-73.968744],[40.67008,-73.968681],[40.670229,-73.96862],[40.670395,-73.968602],[40.67056,-73.968637],[40.670712,-73.96871],[40.670849,-73.968813],[40.670958,-73.968975],[40.671057,-73.969161],[40.671113,-73.969312],[40.671155,-73.969532],[40.671166,-73.969752],[40.671136,-73.969965],[40.671067,-73.970173],[40.670994,-73.970316],[40.670879,-73.970488],[40.670746,-73.97062],[40.670593,-73.970724],[40.670439,-73.970832],[40.670293,-73.970934],[40.67019,-73.971014],[40.67004,-73.971124],[40.669887,-73.971246],[40.669779,-73.971359],[40.669672,-73.971485],[40.669532,-73.971643],[40.669394,-73.971776],[40.669271,-73.971854],[40.669104,-73.97196],[40.66895,-73.972047],[40.668783,-73.972108],[40.668637,-73.972186],[40.668493,-73.972245],[40.66836,-73.972251],[40.668173,-73.972267],[40.668006,-73.972292],[40.667845,-73.972299],[40.667682,-73.9723],[40.667521,-73.972298],[40.667361,-73.972286],[40.667196,-73.972262],[40.667066,-73.972236],[40.666882,-73.972189],[40.666743,-73.972157],[40.666567,-73.97214],[40.6664,-73.972157],[40.666233,-73.972208],[40.66607,-73.97228],[40.66595,-73.972344],[40.665795,-73.972454],[40.665661,-73.972598],[40.665564,-73.97272],[40.665424,-73.972879],[40.66532,-73.97299],[40.66519,-73.973131],[40.665016,-73.973262],[40.664871,-73.973353],[40.664765,-73.973427],[40.664615,-73.973531],[40.664462,-73.973625],[40.664318,-73.973745],[40.664207,-73.973848],[40.664059,-73.973986],[40.66392,-73.974113],[40.663785,-73.974245],[40.66368,-73.974357],[40.663545,-73.974514],[40.663452,-73.974638],[40.663332,-73.974814],[40.66322,-73.975007],[40.663148,-73.975157],[40.663053,-73.975358],[40.662982,-73.975508],[40.662897,-73.975704],[40.662817,-73.975893],[40.662733,-73.976082],[40.662639,-73.976263],[40.662537,-73.976446],[40.662429,-73.97662],[40.662345,-73.976744],[40.662222,-73.976903],[40.662087,-73.977046],[40.661962,-73.977177],[40.661832,-73.977317],[40.661685,-73.977431],[40.661558,-73.977489],[40.661374,-73.977534],[40.661205,-73.977547],[40.661082,-73.977533],[40.660885,-73.977471],[40.660774,-73.977401],[40.660638,-73.97727],[40.660526,-73.977108],[40.660428,-73.97692],[40.660339,-73.976719],[40.660286,-73.976559],[40.660229,-73.976335],[40.660201,-73.976164],[40.660168,-73.97593],[40.660139,-73.975757],[40.660065,-73.975534],[40.659969,-73.975331],[40.659897,-73.975186],[40.659791,-73.975016],[40.659674,-73.974859],[40.659543,-73.974702],[40.659443,-73.974582],[40.659319,-73.974417],[40.659219,-73.974231],[40.659158,-73.974085],[40.65907,-73.973886],[40.658962,-73.973693],[40.658874,-73.973558],[40.658727,-73.973361],[40.658627,-73.973255],[40.658504,-73.973158],[40.658368,-73.973084],[40.658177,-73.973015],[40.658031,-73.972991],[40.657881,-73.972981],[40.657686,-73.972995],[40.657551,-73.973019],[40.657372,-73.973046],[40.657228,-73.973057],[40.657081,-73.973068],[40.656888,-73.973078],[40.656746,-73.973077],[40.656537,-73.973063],[40.656407,-73.973038],[40.656263,-73.972981],[40.656089,-73.972886],[40.65597,-73.972813],[40.655817,-73.972688],[40.655706,-73.972577],[40.655557,-73.972413],[40.655447,-73.972291],[40.655329,-73.972169],[40.655169,-73.972031],[40.655044,-73.971947],[40.654869,-73.971848],[40.654744,-73.971796],[40.654577,-73.971754],[40.654409,-73.971742],[40.654228,-73.971769],[40.654098,-73.971804],[40.653924,-73.97185],[40.653761,-73.971896],[40.653636,-73.971931],[40.653457,-73.971967],[40.65332,-73.971967],[40.653133,-73.971936],[40.652998,-73.971899],[40.652817,-73.971829],[40.652648,-73.971737],[40.652502,-73.971633],[40.652408,-73.971531],[40.652288,-73.971375],[40.652179,-73.971216],[40.652113,-73.971019],[40.65209,-73.970839],[40.652085,-73.970593],[40.652102,-73.970359],[40.652126,-73.970191],[40.652169,-73.969973],[40.652237,-73.969776],[40.652334,-73.969594],[40.652443,-73.969413],[40.652546,-73.969237],[40.652646,-73.969067],[40.65274,-73.968909],[40.652843,-73.968749],[40.652959,-73.968594],[40.653051,-73.968475],[40.653188,-73.968261],[40.653261,-73.96813],[40.653414,-73.967815]];
+const DIST=[0,16,36,56,71,91,106,127,146,160,180,199.5,214,235,254,268.5,288,308.5,324,344,358.5,377.5,397,417,432,451,470,484.5,503.5,522.5,540.5,559,577.5,596,611,629,647,665,682,701.5,721,740,756,772.5,794,813,827,846,866,885,899.5,918.5,937,955,974.5,993,1011,1025,1044,1064,1083,1100,1118,1135,1153,1171,1191,1209,1223.5,1242.5,1262,1282,1296,1315,1334,1351,1369,1390,1404.5,1423.5,1444,1461.5,1480,1495,1513,1531,1549,1570,1585,1604.5,1620,1640,1656,1675,1695.5,1714,1728,1746,1766,1785,1801,1819,1840.5,1854,1876,1893.5,1910.5,1929.5,1948.5,1962,1981,2001.5,2017.5,2038,2056,2074,2088.5,2110,2127,2145,2164,2181,2200,2217,2234,2251,2270,2289,2307,2324,2342,2362,2380,2395,2414,2432.5,2451,2470.5,2485,2504,2523,2542,2561,2579,2593,2613,2633,2649,2665,2684,2703.5,2719,2738,2758,2776,2793,2812,2828,2847,2864.5,2883,2901,2918.5,2937,2956,2972,2993,3008,3026.5,3045.5,3065,3084,3099,3118,3138,3153,3173,3188,3206,3228,3245.5,3260,3279,3297,3317,3333,3352,3370,3390,3405,3425,3440,3460,3480.5,3496,3515,3530,3548,3566.5,3585,3604.5,3623,3641,3656,3676,3694,3712,3731,3751,3766.5,3786,3804,3819,3841,3855,3873,3892,3913,3931,3946.5,3967,3982,4002,4016.5,4038,4056.5,4072,4090,4109,4129,4144,4163.5,4181.5,4197,4216,4237,4251,4273,4290.5,4307,4323,4345,4362,4378.5,4398.5,4415,4435,4451,4467,4489,4503.5,4526,4543.5,4560,4579,4594,4614,4631,4651,4669.5,4685,4704,4722,4741.5,4757,4775,4795,4814,4829.5,4848,4866.5,4883,4902,4918.5,4938.5,4954,4975,4994,5012,5026,5045.5,5063,5083.5,5099,5119,5138,5152.5,5171,5189.5,5209.5,5228,5246,5263.5,5281,5298.5,5318,5333,5355,5370,5388.6];
+const ALT=[26,26,26,27,27,27,27,27,27,27,26,26,26,26,26,26,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,26,26,26,26,26,26,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,28,28,29,29,29,29,30,30,30,31,31,32,32,32,33,33,33,33,33,33,33,33,33,33,33,33,33,34,34,34,34,34,34,34,34,34,34,34,35,34,34,34,34,35,36,36,36,37,37,38,39,40,40,41,41,42,43,44,44,45,46,46,47,47,48,49,50,50,50,51,52,52,53,53,54,55,55,55,55,55,55,55,54,54,54,54,54,53,53,53,54,54,54,53,53,53,52,52,52,52,51,51,51,51,51,51,51,51,51,52,52,52,52,52,52,52,52,52,52,52,52,52,52,52,52,52,53,53,53,53,54,54,54,54,54,53,53,53,53,53,53,53,53,53,53,53,53,54,54,54,54,53,53,52,52,52,51,51,51,51,51,50,50,50,50,50,50,50,50,49,49,48,47,47,47,46,46,46,46,46,46,46,46,46,46,46,45,45,45,44,43,43,42,42,42,41,40,39,38,38,37,37,36,35,35,33,32,32,31,30,29,28,28,27,27,27,26,26,26,26,26,26,26,25,25,25,25,25,24,24,24,24,24,25,25,25,25,25,25,25,25,25,26,26,26,26,27];
+
+const TOTAL=5388.6, MI=1609.344;
+const SEGS=[
+ {from:0,to:1000,w:0.985,c:'var(--s1)',name:'The Peristyle Flats',where:'East Drive · Parkside to Lincoln Rd',tags:[['trap','trap #1']],
+  sub:'A kilometer of flat road and terrible decisions.',
+  cue:'Flat. Boring. Do not get excited.',
+  course:['You start at the Peristyle, a Greek-revival shelter built in 1905 for, as far as anyone can tell, this exact purpose.','The first kilometer runs flat up the East Drive along the edge of the park. It is the only stretch where the course is honest with you.','Use it to settle in. You are about to need every bit of composure you own.'],
+  pace:['Your first 400 meters will feel effortless. That is the problem.','Goal pace, not group pace. The person who bolts off the line is either much faster than you or about to learn something.','You can\'t win the Glue Loop in the first kilometer, but you can definitely lose it.'],
+  tech:['Relax your shoulders. Unclench your jaw. You\'re clenching it; I can tell from here.','Run the inside line around the gentle bends. Free distance is the only free thing in Brooklyn.'],
+  fuel:['You do not need a gel for a 3.35-mile race. I say this with love.']},
+ {from:1000,to:2400,w:1.075,c:'var(--s2)',name:'The Hill',where:'East Drive · past the zoo to the top',tags:[['trap','trap #2'],['sneak','the whole race, honestly']],
+  sub:'Roughly 90 feet of climb, and every one of them personal.',
+  cue:'Short steps. Let pace go. It ends at the top.',
+  course:['The East Drive tilts up past the zoo and keeps tilting. It starts gentle enough that you won\'t notice, which is the point.','The steepest stretch, around the "Lane Use" sign, hits about 5.4%. You will develop feelings about this sign.','You\'ll pass the turnoff to the zoo. The sea lions do not care how your race is going.'],
+  pace:['This is where the race is decided, mostly by people who surged in segment one.','Give the hill 15–25 seconds per mile without a fight. You\'ll get it back on the West Drive with interest.','Run by breath. If you can\'t say "Peristyle," you\'re going too hard.'],
+  tech:['Shorten your stride, drive your elbows back, eyes 30 meters ahead. Never look at the top; the top is a liar.','When it feels like it\'s flattening out, it isn\'t. There\'s one more kick before the summit.'],
+  fuel:['If you\'re carrying a bottle on a 3-mile loop, this is when you\'ll realize why nobody does.']},
+ {from:2400,to:3900,w:1.0,c:'var(--s3)',name:'The Top of the Park',where:'The north end · onto the West Drive',tags:[['fav','my favorite stretch']],
+  sub:'A gentle plateau, a turn, and your legs asking what just happened.',
+  cue:'Recover at pace. Reset form. Wait.',
+  course:['You crest near the north end of the park and swing around onto the West Drive. The road flattens and rolls for about a mile.','The Long Meadow opens up to your left. People are having picnics. They chose differently.','This is my favorite stretch of the race, mostly because I\'m no longer on the hill.'],
+  pace:['The "I\'ll make up the time now" urge is strong here. Resist it. Return to goal pace, not above it.','Use the first two minutes to get your breathing back under control. Then, and only then, go to work.'],
+  tech:['Posture check: tall hips, loose hands, quick feet. Your form fell apart on the hill. Pick up the pieces.','This is where a familiar face on the side of the road is worth thirty seconds. Tell your people to stand here.'],
+  fuel:['There\'s a water fountain around here somewhere. You will not stop. Nobody has ever stopped.']},
+ {from:3900,to:4900,w:0.94,c:'var(--s4)',name:'The West Drive Drop',where:'Past the bandshell, down to the Lake',tags:[['trap','trap #3']],
+  sub:'Gravity is finally on your side. Gravity has an agenda.',
+  cue:'Quick feet. Lean in. Don\'t brake.',
+  course:['Past the bandshell, the West Drive drops nearly 90 feet toward the Lake in about a kilometer. Strava has a name for one stretch of it that I can\'t print here.','This is the fastest kilometer of the race for nearly everyone, which is exactly why it\'s a trap.'],
+  pace:['Take what the hill gives you, not what your ego wants. A runaway descent costs more at the Lake than it saves here.','Expect mile 3 to come in quicker than mile 2 without you trying. Twenty seconds or so is about the right size of gift; a minute means you\'re about to pay for it.'],
+  tech:['Fast cadence, feet landing under your hips. If you can hear your footsteps slapping, you\'re braking.','Lean slightly from the ankles. Let the road carry you. Smile, it\'s downhill.'],
+  fuel:['Nothing on course. You are on your own, as you have been all along.']},
+ {from:4900,to:TOTAL,w:0.985,c:'var(--s5)',name:'The Finishing Kick',where:'Along the Lake · back to the Peristyle',tags:[],
+  sub:'Five hundred meters of flat road between you and the pile of bags at the Peristyle.',
+  cue:'Empty the tank. Look good for the photo.',
+  course:['The road bottoms out along the Lake and flattens for the run home. After the descent, flat feels uphill. It isn\'t. Your legs are lying.','You\'ll see the Peristyle before you reach it. It\'s further than it looks. Everything in this park is further than it looks.'],
+  pace:['Now it\'s time to race people, not the clock. Pick a friend ahead of you and reel them in.','There\'s no finish chute. There\'s no medal. There is, however, eternal bragging rights, which last until the next Glue Loop.'],
+  tech:['Head up through the finish. Somebody is taking a photo. That photo is going in the group chat.','Remember how lucky you are to be able to run this loop. Then remember it\'s only 3.35 miles and you can do it again next week.'],
+  fuel:['After: collect the shirt. Then a bagel. In that order.']}
+];
+
+const S={goal:1350,model:'course',neg:20,unit:'mi'};
+const $=id=>document.getElementById(id);
+function fmt(s){s=Math.round(s);const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return (h?h+':'+String(m).padStart(2,'0'):m)+':'+String(x).padStart(2,'0');}
+function pieces(){
+  if(S.model==='even')return [[0,TOTAL,S.goal/TOTAL]];
+  if(S.model==='neg'){const H=TOTAL/2;return [[0,H,(S.goal+S.neg)/(2*H)],[H,TOTAL,(S.goal-S.neg)/(2*H)]];}
+  const sum=SEGS.reduce((a,s)=>a+(s.to-s.from)*s.w,0),base=S.goal/sum;
+  return SEGS.map(s=>[s.from,s.to,base*s.w]);
+}
+function elapsed(d,P){let t=0;for(const [a,b,p] of P){if(d<=a)break;t+=(Math.min(d,b)-a)*p;}return t;}
+function paceStr(secPerM){return fmt(secPerM*(S.unit==='mi'?MI:1000))+'/'+S.unit;}
+const miles=d=>(d/MI).toFixed(d>=TOTAL-1?2:1).replace(/\.0$/,'');
+
+function renderSegs(){
+  $('segs').innerHTML=SEGS.map((s,i)=>`
+  <article class="seg" style="--c:${s.c}" id="seg${i+1}">
+    <div class="seg-top"><span class="pill">mi ${miles(s.from)} – ${miles(s.to)}</span><span class="pill">${s.where}</span>${s.tags.map(t=>`<span class="pill ${t[0]}">${t[1]}</span>`).join('')}</div>
+    <h3><span class="num">${i+1}.</span> ${s.name}</h3>
+    <p class="sub">${s.sub}</p>
+    <div class="split"><div><small>Your split</small><strong>mi ${miles(s.from)}–${miles(s.to)}</strong></div><div><small>Segment pace</small><strong class="sp"></strong></div><div><small>At mi ${miles(s.to)}</small><strong class="se"></strong></div></div>
+    <h4>Course</h4><ul>${s.course.map(x=>`<li>${x}</li>`).join('')}</ul>
+    <h4>Pace</h4><ul>${s.pace.map(x=>`<li>${x}</li>`).join('')}</ul>
+    <h4>Technique</h4><ul>${s.tech.map(x=>`<li>${x}</li>`).join('')}</ul>
+    <h4>Fuel &amp; more</h4><ul>${s.fuel.map(x=>`<li>${x}</li>`).join('')}</ul>
+  </article>`).join('');
+  $('legend').innerHTML=SEGS.map((s,i)=>`<span><i style="background:${s.c}"></i>${i+1}. ${s.name}</span>`).join('');
+}
+
+function update(){
+  const P=pieces();
+  $('goalOut').textContent=fmt(S.goal);
+  $('negOut').textContent=fmt(S.neg);
+  $('negWrap').hidden=S.model!=='neg';
+  $('avgOut').textContent=paceStr(S.goal/TOTAL);
+  const h=elapsed(TOTAL/2,P);
+  $('h1Out').textContent=fmt(h);$('h2Out').textContent=fmt(S.goal-h);
+  document.querySelectorAll('.model').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===S.model));
+  document.querySelectorAll('[data-u]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.u===S.unit));
+  document.querySelectorAll('#quick .chip').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.g===S.goal));
+  SEGS.forEach((s,i)=>{const el=$('seg'+(i+1));const t0=elapsed(s.from,P),t1=elapsed(s.to,P);
+    el.querySelector('.sp').textContent=paceStr((t1-t0)/(s.to-s.from));el.querySelector('.se').textContent=fmt(t1);});
+  const marks=[MI,2*MI,3*MI,TOTAL];let prev=0,rows='';
+  marks.forEach((m,i)=>{const t0=elapsed(prev,P),t1=elapsed(m,P);
+    rows+=`<tr><td>${i<3?'Mile '+(i+1):'3.35 · Finish'}</td><td>${paceStr((t1-t0)/(m-prev))}</td><td>${fmt(t1)}</td></tr>`;prev=m;});
+  $('mileTable').innerHTML=rows;
+  const modelName={even:'Even',course:'Course-aware',neg:'Negative split'}[S.model];
+  $('sheetMeta').textContent=`Goal ${fmt(S.goal)} · ${modelName} · avg ${paceStr(S.goal/TOTAL)} · halves ${fmt(h)} / ${fmt(S.goal-h)}`;
+  $('sheetTable').innerHTML=SEGS.map(s=>{const t0=elapsed(s.from,P),t1=elapsed(s.to,P);
+    return `<tr><td>${miles(s.from)}–${miles(s.to)}</td><td>${s.name}</td><td>${paceStr((t1-t0)/(s.to-s.from))}</td><td>${fmt(t1)}</td><td style="font-family:var(--serif)">${s.cue}</td></tr>`}).join('');
+}
+
+function drawProfile(){
+  const W=800,H=200,pad=30,amin=20,amax=60;
+  const x=d=>pad+(d/TOTAL)*(W-2*pad), y=a=>H-pad-((a-amin)/(amax-amin))*(H-2*pad);
+  let g='';
+  SEGS.forEach((s,i)=>{g+=`<rect x="${x(s.from)}" y="${pad-10}" width="${x(s.to)-x(s.from)}" height="${H-2*pad+10}" fill="${s.c}" opacity="${i%2?0.07:0.13}"/>`;
+    g+=`<text x="${(x(s.from)+x(s.to))/2}" y="${pad-14}" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="${s.c}">${i+1}</text>`;});
+  const pts=DIST.map((d,i)=>`${x(d).toFixed(1)},${y(ALT[i]).toFixed(1)}`).join(' ');
+  g+=`<polygon points="${x(0)},${H-pad} ${pts} ${x(TOTAL)},${H-pad}" fill="var(--glue)" opacity=".18"/>`;
+  g+=`<polyline points="${pts}" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/>`;
+  [0,1,2,3].forEach(m=>{const d=m*MI;g+=`<line x1="${x(d)}" x2="${x(d)}" y1="${H-pad}" y2="${H-pad+5}" stroke="var(--ink)"/><text x="${x(d)}" y="${H-pad+18}" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="var(--muted)">mi ${m}</text>`;});
+  g+=`<text x="${x(TOTAL)}" y="${H-pad+18}" text-anchor="end" font-family="IBM Plex Mono" font-size="11" fill="var(--muted)">3.35</text>`;
+  [30,40,50].forEach(a=>{g+=`<text x="${pad-6}" y="${y(a)+4}" text-anchor="end" font-family="IBM Plex Mono" font-size="10" fill="var(--muted)">${Math.round(a*3.281)}′</text>`;});
+  g+=`<text x="${x(1700)}" y="${y(46)-8}" font-family="Anton, Impact, 'Arial Narrow', sans-serif" font-size="14" fill="var(--s2)" text-anchor="end">the hill ↗</text>`;
+  g+=`<text x="${x(4350)}" y="${y(40)-6}" font-family="Anton, Impact, 'Arial Narrow', sans-serif" font-size="14" fill="var(--s4)">↘ the drop</text>`;
+  g+=`<line id="cur" x1="0" x2="0" y1="${pad-10}" y2="${H-pad}" stroke="var(--glue)" stroke-width="2" opacity="0"/><circle id="curdot" r="5" fill="var(--glue)" stroke="var(--ink)" opacity="0"/>`;
+  g+=`<rect x="${pad}" y="0" width="${W-2*pad}" height="${H}" fill="transparent" id="hit"/>`;
+  const svg=$('profile');svg.innerHTML=g;
+  const move=e=>{const r=svg.getBoundingClientRect();const px=((e.touches?e.touches[0].clientX:e.clientX)-r.left)*(W/r.width);
+    const d=Math.max(0,Math.min(TOTAL,(px-pad)/(W-2*pad)*TOTAL));let i=DIST.findIndex(v=>v>=d);if(i<0)i=DIST.length-1;
+    const seg=SEGS.find(s=>d>=s.from&&d<=s.to);
+    $('cur').setAttribute('x1',x(d));$('cur').setAttribute('x2',x(d));$('cur').setAttribute('opacity',1);
+    $('curdot').setAttribute('cx',x(DIST[i]));$('curdot').setAttribute('cy',y(ALT[i]));$('curdot').setAttribute('opacity',1);
+    $('tip').textContent=`mi ${(d/MI).toFixed(2)} · ${Math.round(ALT[i]*3.281)} ft · ${seg?seg.name:''}`;
+    mapDot(i);};
+  svg.addEventListener('mousemove',move);svg.addEventListener('touchmove',move,{passive:true});
+}
+
+let MAPXY=[];
+function drawMap(){
+  const W=320,H=420,pad=26,k=Math.cos(40.66*Math.PI/180);
+  const lats=LOC.map(p=>p[0]),lngs=LOC.map(p=>p[1]);
+  const minLa=Math.min(...lats),maxLa=Math.max(...lats),minLo=Math.min(...lngs),maxLo=Math.max(...lngs);
+  const sx=(W-2*pad)/((maxLo-minLo)*k),sy=(H-2*pad)/(maxLa-minLa),s=Math.min(sx,sy);
+  const ox=(W-(maxLo-minLo)*k*s)/2,oy=(H-(maxLa-minLa)*s)/2;
+  MAPXY=LOC.map(([la,lo])=>[ox+(lo-minLo)*k*s,oy+(maxLa-la)*s]);
+  let g=`<polygon points="${MAPXY.map(p=>p.join(',')).join(' ')}" fill="var(--park-soft)" stroke="none"/>`;
+  SEGS.forEach((sg,i)=>{const idx=DIST.map((d,j)=>j).filter(j=>DIST[j]>=sg.from-20&&DIST[j]<=sg.to+20);
+    g+=`<polyline points="${idx.map(j=>MAPXY[j].join(',')).join(' ')}" fill="none" stroke="${sg.c}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>`;
+    const mid=idx[Math.floor(idx.length/2)],[mx,my]=MAPXY[mid];
+    g+=`<g transform="translate(${mx},${my})"><circle r="11" fill="#fff" stroke="${sg.c}" stroke-width="2.5"/><text y="4" text-anchor="middle" font-family="Anton, Impact, 'Arial Narrow', sans-serif" font-size="12" fill="${sg.c}">${i+1}</text></g>`;});
+  [1,2,3].forEach(m=>{const i=DIST.findIndex(d=>d>=m*MI);const [mx,my]=MAPXY[i];
+    g+=`<circle cx="${mx}" cy="${my}" r="4" fill="var(--ink)"/><text x="${mx+8}" y="${my+4}" font-family="IBM Plex Mono" font-size="11" fill="var(--ink)">${m}</text>`;});
+  const [sx0,sy0]=MAPXY[0];
+  g+=`<rect x="${sx0-8}" y="${sy0-8}" width="16" height="16" fill="var(--ink)"/><text x="${sx0+10}" y="${sy0+28}" text-anchor="end" font-family="IBM Plex Mono" font-size="11" fill="var(--ink)">start/finish · Peristyle</text>`;
+  g+=`<text x="${W/2}" y="${H/2}" text-anchor="middle" font-family="Anton, Impact, 'Arial Narrow', sans-serif" font-size="15" letter-spacing="1" fill="var(--glue-deep)" opacity=".55">PROSPECT PARK</text>`;
+  g+=`<text x="${W-8}" y="16" text-anchor="end" font-family="IBM Plex Mono" font-size="11" fill="var(--muted)">N ↑</text>`;
+  g+=`<circle id="mapdot" r="7" fill="var(--glue)" stroke="var(--ink)" stroke-width="2" opacity="0"/>`;
+  $('map').innerHTML=g;
+}
+function mapDot(i){const d=$('mapdot');if(!d)return;d.setAttribute('cx',MAPXY[i][0]);d.setAttribute('cy',MAPXY[i][1]);d.setAttribute('opacity',1);}
+
+// controls
+const q=$('quick');[1050,1200,1350,1500,1650,1800,2100].forEach(g=>{const b=document.createElement('button');b.className='chip';b.dataset.g=g;b.textContent=fmt(g);b.onclick=()=>{S.goal=g;$('goal').value=g;update();};q.appendChild(b);});
+$('goal').oninput=e=>{S.goal=+e.target.value;update();};
+$('neg').oninput=e=>{S.neg=+e.target.value;update();};
+document.querySelectorAll('.model').forEach(b=>b.onclick=()=>{S.model=b.dataset.m;update();});
+document.querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>{S.unit=b.dataset.u;update();});
+
+renderSegs();drawProfile();drawMap();update();
+</script>
+</body>
+</html>
