@@ -85,6 +85,8 @@ input[type=range]{width:100%;accent-color:var(--glue)}
 /* run */
 .run-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:28px;align-items:start}
 .mapbox{position:sticky;top:16px;background:#fff;border:2px solid var(--ink);border-radius:14px;padding:12px}
+#map{display:block;width:100%;height:auto}
+.mapbox > *{min-width:0}
 .legend{font-family:var(--mono);font-size:12px;display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:6px}
 .legend{display:grid;grid-template-columns:1fr;gap:2px}
 .legend i{display:inline-block;width:14px;height:5px;border-radius:3px;vertical-align:middle;margin-right:6px}
@@ -143,6 +145,7 @@ footer a{color:#fff}
   /* full border at rest; once pinned, the top 14px (border + rounded corners) slides off-screen */
   .mapbox{position:sticky;top:-14px;z-index:5;order:-1;display:grid;grid-template-columns:64px 1fr;gap:10px;align-items:center;padding:20px 10px 6px;border-radius:12px;margin:0 -8px}
   .mapbox .cap{display:none}
+  #map{width:64px;height:auto;max-height:110px}
   #map .lbl,#map .badge{display:none}
   #map .seg-line{stroke-width:7}
   #map.has-active .seg-line.on{stroke-width:11}
